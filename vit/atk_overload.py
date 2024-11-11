@@ -1,13 +1,6 @@
 from collections import defaultdict
 from loguru import logger
 from tqdm import tqdm
-
-import torch
-from transformers import AutoImageProcessor, DetrForObjectDetection
-from PIL import Image
-import requests
-
-
 import contextlib
 import io
 import os
@@ -19,11 +12,11 @@ import numpy as np
 import torch.nn.functional as F
 from torch.optim import Adam
 import cv2
-import CONSTANTS
+import logging
+
 learning_rate = 0.02 #0.07
 epochs = 150
 
-import logging
 
 def create_logger(module, filename, level):
     # Create a formatter for the logger, setting the format of the log with time, level, and message
@@ -91,8 +84,9 @@ def run_attack(outputs,result,bx, strategy, max_tracker_num, mask):
     bx.grad = bx.grad / (torch.norm(bx.grad,p=2) + 1e-20)
     bx.data = -3.5 * mask * bx.grad+ bx.data
     count = (scores > 0.9).sum()
-    print('loss',loss.item(),'loss_2',loss2.item(),'loss_3',loss3.item(),'count:',count.item())
-    return bx
+    if __name__ == "__main__":
+      print('loss',loss.item(),'loss_2',loss2.item(),'loss_3',loss3.item(),'\ncount:',count.item())
+    return bx, count.item()
 
 def attack(model, image_processor, inputs, strategy=0, max_tracker_num=15, epochs=200, device=None):
   outputs = None
@@ -122,24 +116,38 @@ def attack(model, image_processor, inputs, strategy=0, max_tracker_num=15, epoch
     result = image_processor.post_process_object_detection(outputs, 
                                                             threshold = CONSTANTS.POST_PROCESS_THRESH, 
                                                             target_sizes = target_size)[0]
-
     
     if iter == 0:
       mask = generate_mask(outputs, result, added_imgs.shape[3], added_imgs.shape[2]).to(device) # The mask is generated only once
-    bx = run_attack(outputs,result,bx, strategy, max_tracker_num, mask)
+    bx, count = run_attack(outputs, result, bx, strategy, max_tracker_num, mask)
     
-  return
+  corrupted_outputs = outputs
+  
+  return count, corrupted_outputs
 
 
+
+import CONSTANTS
+import torch
+from transformers import AutoImageProcessor, DetrForObjectDetection
+from PIL import Image
+import requests
 
 if __name__=="__main__":
-  url = "http://images.cocodataset.org/val2017/000000039769.jpg"
+  url = "http://images.cocodataset.org/val2017/000000000776.jpg"
   image = Image.open(requests.get(url, stream=True).raw)
   
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
   image_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50")
   model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50").to(device)
-  inputs = image_processor(images=image, return_tensors="pt")
+  inputs = image_processor(images=image, return_tensors="pt").to(device)
   
-  attack(model, image_processor, inputs, device=device)
+  # legacy param: strategy; max_tracker_num
+  count, corrupted_outputs = attack(model, 
+                                    image_processor, 
+                                    inputs, 
+                                    strategy=0, 
+                                    max_tracker_num=15, 
+                                    epochs=200,
+                                    device=device)

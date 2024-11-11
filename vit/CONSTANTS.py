@@ -16,3 +16,5 @@ COCO_CLASSES=[
     "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", 
     "toothbrush"
 ]
+
+VAL_SUBSET_SIZE=100
