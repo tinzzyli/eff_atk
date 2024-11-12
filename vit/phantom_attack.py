@@ -4,6 +4,14 @@ from tqdm import tqdm
 
 import torch
 
+from yolox.utils import (
+    gather,
+    is_main_process,
+    postprocess,
+    synchronize,
+    time_synchronized,
+    xyxy2xywh
+)
 
 import contextlib
 import io
@@ -25,6 +33,7 @@ from pathlib import Path
 YOLOV5_FILE = Path(f"../model/yolov5").resolve()
 if str(YOLOV5_FILE) not in sys.path:
     sys.path.append(str(YOLOV5_FILE))  # add ROOT to PATH
+from models.common import DetectMultiBackend
 # from utils.general import Profile, non_max_suppression
 
 from PIL import Image
@@ -276,13 +285,6 @@ def max_objects(output_patch, conf_thres=0.25, target_class=0):
 
     return mean_conf
 
-def xyxy2xywh(box):
-    x1, y1, x2, y2 = box[..., 0], box[..., 1], box[..., 2], box[..., 3]
-    w = x2 - x1  # 宽度
-    h = y2 - y1  # 高度
-    x = x1 + w / 2  # 中心 x 坐标
-    y = y1 + h / 2  # 中心 y 坐标
-    return torch.stack((x, y, w, h), dim=-1)
 
 def bboxes_area(output_clean, output_patch, patch_size, conf_thres=0.25):
 
@@ -376,7 +378,7 @@ class PhantomAttack:
     """
 
     def __init__(
-        self, image, image_name, img_size): # , confthre, nmsthre):
+        self, image_list, image_name_list, img_size): # , confthre, nmsthre):
         """
         Args:
             dataloader (Dataloader): evaluate dataloader.
@@ -386,8 +388,8 @@ class PhantomAttack:
                 is defined in the config file.
             nmsthre (float): IoU threshold of non-max supression ranging from 0 to 1.
         """
-        self.image = image
-        self.image_name = image_name
+        self.image_list = image_list
+        self.image_name_list = image_name_list
         self.img_size = img_size
         
         self.confthre = 0.6
@@ -481,6 +483,8 @@ class PhantomAttack:
         data_list = []
         results = []
         video_names = defaultdict()
+        progress_bar = tqdm if is_main_process() else iter
+
             
         frame_id = 0
         total_l1 = 0
@@ -516,7 +520,9 @@ class PhantomAttack:
 
             l2_norm = torch.sqrt(torch.mean(adv_patch ** 2))
             l1_norm = torch.norm(adv_patch, p=1)/(bx.shape[3]*bx.shape[2])
-
+            
+            # added_blob = added_blob[..., ::-1]
+            # added_blob_2 = added_blob_2[..., ::-1]
             
             total_l1 += l1_norm
             total_l2 += l2_norm
@@ -524,8 +530,22 @@ class PhantomAttack:
             mean_l2 = total_l2/frame_id
             print(mean_l1.item(),mean_l2.item())
             
-
-
+        added_blob = torch.clamp(applied_patch*255,0,255).squeeze().permute(1, 2, 0).detach().cpu().numpy()
+        added_blob = added_blob[..., ::-1]
+        # print(f"added_blob.shape = {added_blob.shape}")
+        # print(f"added_blob = {added_blob}")
+        # time.sleep(100000)
+            
+        input_path = f"{input_dir}/{image_name}"
+        output_path = f"{output_dir}/{image_name}"
+        cv2.imwrite(output_path, added_blob) # lifang535: 这个 attack 效果似乎不受小数位损失影响
+        
+        print(f"saved image to {output_path}")
+        objects_num_before_nms, objects_num_after_nms, person_num_after_nms, car_num_after_nms = infer(input_path)
+        _objects_num_before_nms, _objects_num_after_nms, _person_num_after_nms, _car_num_after_nms = infer(output_path)
+        
+        logger.info(f"objects_num_before_nms: {objects_num_before_nms}, objects_num_after_nms: {objects_num_after_nms}, person_num_after_nms: {person_num_after_nms}, car_num_after_nms: {car_num_after_nms} -> _objects_num_before_nms: {_objects_num_before_nms}, _objects_num_after_nms: {_objects_num_after_nms}, _person_num_after_nms: {_person_num_after_nms}, _car_num_after_nms: {_car_num_after_nms}")
+        # infer(output_path_tiff)
 
         return mean_l1,mean_l2
     
@@ -533,23 +553,30 @@ class PhantomAttack:
         """
         Run the evaluation.
         """
-        image = np.ascontiguousarray(self.image)
-        image = torch.from_numpy(image).to(device).float()
-        image /= 255.0
-        print("=-=-=-=-=-=-=-=-=-=")
-        print(image.shape)
-        if len(image.shape) == 3:
-            image = image[None]
+        for image, image_name in zip(self.image_list, self.image_name_list):
+            image = image.transpose((2, 0, 1))[::-1]
+            image = np.ascontiguousarray(image)
+            image = torch.from_numpy(image).to(device).float()
+            image /= 255.0
 
-        print(f"image.shape = {image.shape}")
-        
-        mean_l1, mean_l2 = self.evaluate(image, None)
+            if len(image.shape) == 3:
+                image = image[None]
+
+            # print(f"image.shape = {image.shape}")
+            
+            mean_l1, mean_l2 = self.evaluate(image, image_name)
 
 
 
-def infer(model, image_processor, inputs, device):
-    image = inputs["pixel_values"].to(device)
-    # image /= 255.0
+def infer(image_path):
+    image = cv2.imread(image_path)
+    # print(f"image.shape = {image.shape}") # (608, 1088, 3)
+    # print(f"image = {image}")
+
+    image = image.transpose((2, 0, 1))[::-1]
+    image = np.ascontiguousarray(image)
+    image = torch.from_numpy(image).to(device).float()
+    image /= 255.0
     
     if len(image.shape) == 3:
         image = image[None]
@@ -562,28 +589,11 @@ def infer(model, image_processor, inputs, device):
     
     # print(f"image_tensor = {image_tensor}")
     
-    outputs = model(image)
+    outputs = model(image_tensor)
     
-    target_size = [image.shape[2:] for _ in range(1)]
-    result = image_processor.post_process_object_detection(outputs, 
-                                                            threshold = CONSTANTS.POST_PROCESS_THRESH, 
-                                                            target_sizes = target_size)[0]
-    logits = outputs["logits"]
-    conf = torch.softmax(logits, dim=-1)
-    print(conf.shape)
-    scores = result["scores"]       
-    boxes = result["boxes"] 
-
-    # 使用 softmax 将 logits 转换为概率分数
-
-    # 将类别分数和边框坐标在最后一个维度拼接
-
-    outputs = torch.cat([boxes, scores.view(-1, 1)], dim=-1)
-    print(outputs.shape)
-    outputs = torch.cat([outputs, conf], dim=-1)
     # print(f"outputs = {outputs}")
     
-    # outputs = outputs[0].unsqueeze(0)
+    outputs = outputs[0].unsqueeze(0)
     
     # scores = outputs[..., index] * outputs[..., 4]
     # scores = scores[scores > 0.25]
@@ -595,11 +605,8 @@ def infer(model, image_processor, inputs, device):
     max_det = 1000    # maximum detections per image
     
     xc = outputs[..., 4] > 0
-    print(xc, xc.shape, "\n", xc)
     x = outputs[0][xc[0]]
-    print(x, x.shape)
-    # x[:, 5:] *= x[:, 4:5]
-    # print(x[:, 4])
+    x[:, 5:] *= x[:, 4:5]
     max_scores = x[:, 5:].max(dim=-1).values
     objects_num_before_nms = len(max_scores[max_scores > 0.25]) # 这个是对的，用最大的 class confidence 筛选
     
@@ -645,31 +652,52 @@ def dir_process(dir_path):
     return image_list, image_name_list
 
 
-import CONSTANTS
-import torch
-from transformers import AutoImageProcessor, DetrForObjectDetection
-from PIL import Image
-import requests
-
 if __name__ == "__main__":
-    url = "http://images.cocodataset.org/val2017/000000000776.jpg"
-    image = Image.open(requests.get(url, stream=True).raw)
-    
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # image_name = "000001.png"
+    # input_path = f"original_image/{image_name}"
+    # output_path = f"phantom_attack_image/person_epochs_200/{image_name}"
+    # weights = "../model/yolov5/yolov5n.pt" # yolov5s.pt yolov5m.pt yolov5l.pt yolov5x.pt
+    # device = torch.device('cuda:1')
+    # model = DetectMultiBackend(weights=weights, device=device)
+    # names = model.names
+    # infer(output_path)
+    # time.sleep(10000000)
 
-    image_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50")
-    model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50").to(device)
-    inputs = image_processor(images=image, return_tensors="pt").to(device)
+    weights = "../model/yolov5/yolov5n.pt" # yolov5s.pt yolov5m.pt yolov5l.pt yolov5x.pt
+    device = torch.device('cuda:1')
+    model = DetectMultiBackend(weights=weights, device=device)
+    names = model.names
+    print(f"names = {names}")
     
-    # pa = PhantomAttack(
-    #         image=inputs,
-    #         image_name=None,
-    #         img_size=img_size,
-    #     )
-        
-    # pa.run()
+    attack_object_key = 0 # 0: person, 2: car
+    attack_object = names[attack_object_key]
+    index = 5 + attack_object_key # yolov5 输出的结果中，class confidence 对应的 index
+
+    epochs = 200
     
-    infer(model, image_processor, inputs, device)
+    logger_path = f"log/phantom_attack/phantom_attack_{attack_object}_epochs_{epochs}.log"
+    logger = create_logger(f"phantom_attack_{attack_object}_epochs_{epochs}", logger_path, logging.INFO)
+    
+    # logger = create_logger(f"phantom_attack_{attack_object}_epochs_{epochs}", f"phantom_attack_{attack_object}_epochs_{epochs}.log", logging.INFO)
+    
+    input_dir = "original_image"
+    output_dir = f"phantom_attack_image/{attack_object}_epochs_{epochs}"
+    
+    # start_time = time.time()
+    
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    img_size = (608, 1088)
+    image_list, image_name_list = dir_process(input_dir)
+    
+    pa = PhantomAttack(
+        image_list=image_list,
+        image_name_list=image_name_list,
+        img_size=img_size,
+    )
+    
+    pa.run()
     
     
     # phantom_attack(image_list, image_name_list)

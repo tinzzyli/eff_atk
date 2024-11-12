@@ -15,7 +15,7 @@ import json
 import pdb
 from tqdm import tqdm
 import argparse
-import atk_overload
+import eff_atk.vit.old_overload as old_overload
 from datetime import datetime
 import os
 import random
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     if args.atk_type == "overload":
       
       clean_bbox_num = (pred_scores > 0.9).sum()
-      bbox_num = atk_overload.attack(model, 
+      bbox_num = old_overload.attack(model, 
                                      image_processor, 
                                      inputs, 
                                      epochs=args.atk_epochs,

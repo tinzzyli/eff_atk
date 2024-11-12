@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 import inspect
 import json
 import pdb
-
+import CONSTANTS
 
 def print_function_params(func):
     # 获取函数的签名
@@ -76,6 +76,8 @@ def parse_prediction(results):
   boxes = results["boxes"]
   return scores, labels, boxes
 
+def get_label_name(idx):
+    return CONSTANTS.DETR_CLASSES[idx]
 
 def compute_iou(box1, box2):
     x1 = max(box1[0], box2[0])

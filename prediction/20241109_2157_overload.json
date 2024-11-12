@@ -1,0 +1,402 @@
+{
+    "image_108864": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 99
+    },
+    "image_21167": {
+        "clean_bbox_num": 4,
+        "corrupted_bbox_num": 68
+    },
+    "image_262587": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 25
+    },
+    "image_231747": {
+        "clean_bbox_num": 7,
+        "corrupted_bbox_num": 51
+    },
+    "image_212072": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 76
+    },
+    "image_135673": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 100
+    },
+    "image_99053": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 98
+    },
+    "image_522713": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 100
+    },
+    "image_84362": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 72
+    },
+    "image_568584": {
+        "clean_bbox_num": 4,
+        "corrupted_bbox_num": 70
+    },
+    "image_404484": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 64
+    },
+    "image_27696": {
+        "clean_bbox_num": 4,
+        "corrupted_bbox_num": 84
+    },
+    "image_25228": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 2
+    },
+    "image_90062": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 1
+    },
+    "image_207306": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 71
+    },
+    "image_221693": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 70
+    },
+    "image_482477": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 1
+    },
+    "image_579321": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 2
+    },
+    "image_22705": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 97
+    },
+    "image_539143": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 71
+    },
+    "image_187362": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 2
+    },
+    "image_522156": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 93
+    },
+    "image_402346": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 68
+    },
+    "image_209753": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 89
+    },
+    "image_430871": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 100
+    },
+    "image_567640": {
+        "clean_bbox_num": 10,
+        "corrupted_bbox_num": 80
+    },
+    "image_265816": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 71
+    },
+    "image_5529": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 98
+    },
+    "image_154718": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 64
+    },
+    "image_404922": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 67
+    },
+    "image_325838": {
+        "clean_bbox_num": 11,
+        "corrupted_bbox_num": 93
+    },
+    "image_265518": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 75
+    },
+    "image_151820": {
+        "clean_bbox_num": 22,
+        "corrupted_bbox_num": 93
+    },
+    "image_203639": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 67
+    },
+    "image_322829": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 76
+    },
+    "image_99024": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 91
+    },
+    "image_89296": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 67
+    },
+    "image_363666": {
+        "clean_bbox_num": 20,
+        "corrupted_bbox_num": 91
+    },
+    "image_93261": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 95
+    },
+    "image_344100": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 94
+    },
+    "image_329080": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 88
+    },
+    "image_581100": {
+        "clean_bbox_num": 4,
+        "corrupted_bbox_num": 80
+    },
+    "image_251572": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 59
+    },
+    "image_39477": {
+        "clean_bbox_num": 7,
+        "corrupted_bbox_num": 91
+    },
+    "image_441468": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 49
+    },
+    "image_513524": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 2
+    },
+    "image_122962": {
+        "clean_bbox_num": 26,
+        "corrupted_bbox_num": 62
+    },
+    "image_361586": {
+        "clean_bbox_num": 17,
+        "corrupted_bbox_num": 77
+    },
+    "image_76547": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 95
+    },
+    "image_529939": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 95
+    },
+    "image_281687": {
+        "clean_bbox_num": 15,
+        "corrupted_bbox_num": 62
+    },
+    "image_346905": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 92
+    },
+    "image_555972": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 81
+    },
+    "image_182611": {
+        "clean_bbox_num": 7,
+        "corrupted_bbox_num": 88
+    },
+    "image_65736": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 9
+    },
+    "image_42102": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 4
+    },
+    "image_216277": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 5
+    },
+    "image_277020": {
+        "clean_bbox_num": 11,
+        "corrupted_bbox_num": 75
+    },
+    "image_78266": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 71
+    },
+    "image_221754": {
+        "clean_bbox_num": 9,
+        "corrupted_bbox_num": 87
+    },
+    "image_97994": {
+        "clean_bbox_num": 9,
+        "corrupted_bbox_num": 75
+    },
+    "image_363784": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 67
+    },
+    "image_265777": {
+        "clean_bbox_num": 4,
+        "corrupted_bbox_num": 96
+    },
+    "image_435081": {
+        "clean_bbox_num": 14,
+        "corrupted_bbox_num": 98
+    },
+    "image_349678": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 29
+    },
+    "image_157418": {
+        "clean_bbox_num": 9,
+        "corrupted_bbox_num": 73
+    },
+    "image_355240": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 74
+    },
+    "image_341196": {
+        "clean_bbox_num": 4,
+        "corrupted_bbox_num": 64
+    },
+    "image_197388": {
+        "clean_bbox_num": 10,
+        "corrupted_bbox_num": 67
+    },
+    "image_254516": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 33
+    },
+    "image_67213": {
+        "clean_bbox_num": 14,
+        "corrupted_bbox_num": 92
+    },
+    "image_164883": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 74
+    },
+    "image_511999": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 81
+    },
+    "image_231580": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 81
+    },
+    "image_157928": {
+        "clean_bbox_num": 7,
+        "corrupted_bbox_num": 77
+    },
+    "image_444275": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 59
+    },
+    "image_363072": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 96
+    },
+    "image_257370": {
+        "clean_bbox_num": 7,
+        "corrupted_bbox_num": 60
+    },
+    "image_534270": {
+        "clean_bbox_num": 8,
+        "corrupted_bbox_num": 40
+    },
+    "image_208901": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 80
+    },
+    "image_309495": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 1
+    },
+    "image_52007": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 67
+    },
+    "image_217400": {
+        "clean_bbox_num": 3,
+        "corrupted_bbox_num": 90
+    },
+    "image_27932": {
+        "clean_bbox_num": 0,
+        "corrupted_bbox_num": 94
+    },
+    "image_300913": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 66
+    },
+    "image_383339": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 78
+    },
+    "image_255664": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 2
+    },
+    "image_61960": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 56
+    },
+    "image_199236": {
+        "clean_bbox_num": 15,
+        "corrupted_bbox_num": 88
+    },
+    "image_546556": {
+        "clean_bbox_num": 13,
+        "corrupted_bbox_num": 100
+    },
+    "image_300039": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 84
+    },
+    "image_200961": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 47
+    },
+    "image_476415": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 2
+    },
+    "image_377497": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 98
+    },
+    "image_440508": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 1
+    },
+    "image_138979": {
+        "clean_bbox_num": 6,
+        "corrupted_bbox_num": 73
+    },
+    "image_252219": {
+        "clean_bbox_num": 5,
+        "corrupted_bbox_num": 90
+    },
+    "image_233033": {
+        "clean_bbox_num": 11,
+        "corrupted_bbox_num": 61
+    },
+    "image_539445": {
+        "clean_bbox_num": 1,
+        "corrupted_bbox_num": 90
+    },
+    "image_516318": {
+        "clean_bbox_num": 2,
+        "corrupted_bbox_num": 43
+    }
+}

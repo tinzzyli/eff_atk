@@ -13,6 +13,7 @@ import torch.nn.functional as F
 from torch.optim import Adam
 import cv2
 import logging
+from PIL import Image, ImageDraw
 
 learning_rate = 0.02 #0.07
 epochs = 150
@@ -120,9 +121,23 @@ def attack(model, image_processor, inputs, strategy=0, max_tracker_num=15, epoch
     if iter == 0:
       mask = generate_mask(outputs, result, added_imgs.shape[3], added_imgs.shape[2]).to(device) # The mask is generated only once
     bx, count = run_attack(outputs, result, bx, strategy, max_tracker_num, mask)
-    
+    # import pdb; pdb.set_trace()
   corrupted_outputs = outputs
-  
+  array = added_imgs.cpu().detach().squeeze(0).permute(1, 2, 0).numpy() * 255
+  array = array.astype(np.uint8) 
+  pred_boxes = result["boxes"]
+  # Create an Image object from the array
+  image = Image.fromarray(array)
+
+  # Draw bounding boxes
+  draw = ImageDraw.Draw(image)
+  for box in pred_boxes:
+      # Convert tensor box coordinates to list (if necessary)
+      box = box.tolist() if isinstance(box, torch.Tensor) else box
+      x_min, y_min, x_max, y_max = box
+      draw.rectangle([x_min, y_min, x_max, y_max], outline="red", width=2)  # Draw the box with a red outline
+
+  image.save("../test_img/attcked.jpg")
   return count, corrupted_outputs
 
 
@@ -134,7 +149,7 @@ from PIL import Image
 import requests
 
 if __name__=="__main__":
-  url = "http://images.cocodataset.org/val2017/000000000776.jpg"
+  url = "http://images.cocodataset.org/val2017/000000001000.jpg"
   image = Image.open(requests.get(url, stream=True).raw)
   
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
